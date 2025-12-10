@@ -1,0 +1,20 @@
+# Phaser Project Template (no longer needed)
+PP/
+
+# Node modules (if you add npm later)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Build output (if you add a build system)
+dist/
+build/
+
+# Logs
+*.log
