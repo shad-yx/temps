@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEADDAY - Game Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        #builder-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .builder-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: #1a1a1a;
+            border-bottom: 2px solid #333;
+            height: 60px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .builder-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #8B0000;
+            margin-left: 15px;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-text {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #333;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #444;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+        }
+
+        .btn-primary:hover {
+            background: #66BB6A;
+        }
+
+        .btn-success {
+            background: #2196F3;
+        }
+
+        .btn-success:hover {
+            background: #42A5F5;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+        }
+
+        .btn-warning:hover {
+            background: #FFB74D;
+        }
+
+        #unified-builder {
+            flex: 1;
+            overflow: hidden;
+        }
+    </style>
+
+    <!-- Load Editor CSS -->
+    <link rel="stylesheet" href="editor/editor.css">
+</head>
+<body>
+    <div id="builder-container">
+        <!-- Toolbar -->
+        <div class="builder-toolbar">
+            <div class="toolbar-left">
+                <span class="builder-title">🎬 DEADDAY - Game Builder</span>
+            </div>
+            <div class="toolbar-right">
+                <span class="status-text" id="status-text">Drag templates • Edit • Save to export game</span>
+                <button class="btn btn-warning" id="export-btn">📦 Export Game</button>
+                <button class="btn btn-success" id="test-game-btn">▶ Test Game</button>
+            </div>
+        </div>
+
+        <!-- Unified Builder -->
+        <div id="unified-builder"></div>
+    </div>
+
+    <!-- Load Builder Module -->
+    <script type="module">
+        import { UnifiedBuilder } from './editor/UnifiedBuilder.js';
+        import { PersistenceManager } from './src/core/PersistenceManager.js';
+
+        // Initialize persistence for builder
+        const persistence = new PersistenceManager();
+        await persistence.init();
+
+        // Make globally available
+        window.DEADDAY = {
+            persistence,
+            isBuilder: true
+        };
+
+        // Initialize builder
+        const builder = new UnifiedBuilder();
+        builder.init();
+
+        // Export button - saves game.json
+        document.getElementById('export-btn').addEventListener('click', async () => {
+            if (builder.sequence.length === 0) {
+                alert('❌ Add templates to your game first!\n\nDrag templates from the left palette.');
+                return;
+            }
+
+            try {
+                // Create game export
+                const gameData = {
+                    name: builder.currentIteration?.name || 'My Game',
+                    version: '1.0.0',
+                    exported: new Date().toISOString(),
+                    sequence: builder.sequence,
+                    globalState: {
+                        toxicityLevel: 0,
+                        cash: 0,
+                        day: 1
+                    }
+                };
+
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                console.log('📦 EXPORTING GAME');
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                console.log('🎮 Game Name:', gameData.name);
+                console.log('📝 Templates:', gameData.sequence.length);
+                console.log('🗓️ Exported:', gameData.exported);
+                console.log('\n📋 Template Sequence:');
+                gameData.sequence.forEach((template, index) => {
+                    console.log(`  ${index + 1}. ${template.type} - "${template.name || template.templateId}"`);
+                });
+                console.log('\n💾 Saving to:');
+                console.log('  1. Download → game.json (place in root folder)');
+                console.log('  2. localStorage → for Test Game button');
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+                // Save to a well-known location
+                const blob = new Blob([JSON.stringify(gameData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'game.json';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Also save to localStorage as backup
+                localStorage.setItem('DEADDAY_EXPORTED_GAME', JSON.stringify(gameData));
+
+                document.getElementById('status-text').textContent = `✓ Exported: ${gameData.sequence.length} templates → game.json (place in root folder!)`;
+                setTimeout(() => {
+                    document.getElementById('status-text').textContent = 'Drag templates • Edit • Save to export game';
+                }, 8000);
+
+                alert(`✅ Game Exported!\n\n📦 ${gameData.sequence.length} templates exported\n\n📥 Download "game.json" and place it in the root folder\n\n🎮 Then refresh game.html to play!`);
+            } catch (error) {
+                console.error('[Builder] Export failed:', error);
+                alert('❌ Export failed! Check console for details.');
+            }
+        });
+
+        // Test game button - opens game in new tab
+        document.getElementById('test-game-btn').addEventListener('click', async () => {
+            if (builder.sequence.length === 0) {
+                alert('Add templates to your game first!');
+                return;
+            }
+
+            // Save to localStorage for testing
+            const gameData = {
+                name: builder.currentIteration?.name || 'My Game',
+                version: '1.0.0',
+                exported: new Date().toISOString(),
+                sequence: builder.sequence,
+                globalState: {
+                    toxicityLevel: 0,
+                    cash: 0,
+                    day: 1
+                }
+            };
+
+            localStorage.setItem('DEADDAY_EXPORTED_GAME', JSON.stringify(gameData));
+
+            // Open game in new tab
+            window.open('game.html', '_blank');
+        });
+
+        console.log('[Builder] Initialized successfully');
+    </script>
+</body>
+</html>

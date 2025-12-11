@@ -1,0 +1,291 @@
+{
+  "id": "ending_good",
+  "name": "Good Ending Cinematic",
+  "description": "Player achieves the good ending by uncovering the truth",
+  "version": "1.0.0",
+  "duration": 60000,
+  "music": "ending_theme_hopeful",
+  "nextScene": "MenuScene",
+  "fallbackScene": "MenuScene",
+  "assets": {
+    "images": {
+      "ending_bg_sunrise": "assets/cinematics/ending/bg_sunrise.png",
+      "ending_farmer_happy": "assets/cinematics/ending/farmer_relieved.png",
+      "ending_farm_restored": "assets/cinematics/ending/farm_peaceful.png",
+      "ending_credits_bg": "assets/cinematics/ending/credits_bg.png"
+    },
+    "audio": {
+      "ending_theme_hopeful": "assets/audio/music/ending_hopeful.mp3",
+      "birds_chirping": "assets/audio/sfx/birds_morning.mp3"
+    }
+  },
+  "tracks": [
+    {
+      "id": "track_background",
+      "name": "Background",
+      "type": "image",
+      "layer": "background",
+      "keyframes": [
+        {
+          "id": "sunrise_bg",
+          "time": 0,
+          "duration": 25000,
+          "image": "ending_bg_sunrise",
+          "x": 960,
+          "y": 540,
+          "alpha": 0,
+          "entrance": {
+            "type": "fade",
+            "duration": 3000,
+            "targetAlpha": 1
+          }
+        },
+        {
+          "id": "restored_farm",
+          "time": 25000,
+          "duration": 35000,
+          "image": "ending_farm_restored",
+          "x": 960,
+          "y": 540,
+          "alpha": 0,
+          "entrance": {
+            "type": "fade",
+            "duration": 4000,
+            "targetAlpha": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_character",
+      "name": "Character",
+      "type": "image",
+      "layer": "characters-mid",
+      "keyframes": [
+        {
+          "id": "farmer",
+          "time": 5000,
+          "duration": 20000,
+          "image": "ending_farmer_happy",
+          "x": 960,
+          "y": 540,
+          "alpha": 0,
+          "entrance": {
+            "type": "fade",
+            "duration": 2000,
+            "targetAlpha": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_dialogue",
+      "name": "Dialogue",
+      "type": "dialogue",
+      "keyframes": [
+        {
+          "time": 3000,
+          "speaker": "You",
+          "text": "It's over. The nightmare is finally over.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 5000,
+          "speaker": "You",
+          "text": "Grandfather's experiments died with him. The farm can finally be at peace.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 7000,
+          "speaker": "Narrator",
+          "text": "You destroyed the serum research and put an end to the cycle of horror.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 9000,
+          "speaker": "Narrator",
+          "text": "The debt collectors never came. Strange how they disappeared after that night.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 11000,
+          "speaker": "Narrator",
+          "text": "Some questions are better left unanswered.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 13000,
+          "speaker": "You",
+          "text": "Time to start fresh. A real farm, with real animals, living real lives.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 15000,
+          "speaker": "Narrator",
+          "text": "As the sun rises on a new day, you make a promise to yourself.",
+          "speed": 35,
+          "pausePlayback": true
+        },
+        {
+          "time": 17000,
+          "speaker": "You",
+          "text": "Never again. Never again will this land know such darkness.",
+          "speed": 35,
+          "pausePlayback": true
+        }
+      ]
+    },
+    {
+      "id": "track_ending_text",
+      "name": "Ending Title",
+      "type": "text",
+      "layer": "overlay",
+      "keyframes": [
+        {
+          "id": "ending_title",
+          "time": 30000,
+          "duration": 5000,
+          "text": "ENDING: LIBERATION",
+          "x": 960,
+          "y": 300,
+          "fontSize": "48px",
+          "fontFamily": "Arial Black",
+          "color": "#ffdd00",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 2000,
+            "targetAlpha": 1
+          }
+        },
+        {
+          "id": "ending_subtitle",
+          "time": 32000,
+          "duration": 4000,
+          "text": "You broke free from the cycle",
+          "x": 960,
+          "y": 380,
+          "fontSize": "28px",
+          "fontFamily": "Arial",
+          "color": "#ffffff",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 1500,
+            "targetAlpha": 0.9
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_credits",
+      "name": "Credits",
+      "type": "text",
+      "layer": "ui",
+      "keyframes": [
+        {
+          "id": "credits_1",
+          "time": 40000,
+          "duration": 5000,
+          "text": "Thank you for playing DEADDAY",
+          "x": 960,
+          "y": 540,
+          "fontSize": "32px",
+          "fontFamily": "Arial",
+          "color": "#ffffff",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 1500,
+            "targetAlpha": 1
+          }
+        },
+        {
+          "id": "credits_2",
+          "time": 46000,
+          "duration": 5000,
+          "text": "A Visual Novel by the DEADDAY Team",
+          "x": 960,
+          "y": 540,
+          "fontSize": "24px",
+          "fontFamily": "Arial",
+          "color": "#cccccc",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 1500,
+            "targetAlpha": 1
+          }
+        },
+        {
+          "id": "continue_text",
+          "time": 52000,
+          "duration": 8000,
+          "text": "Press any key to continue",
+          "x": 960,
+          "y": 700,
+          "fontSize": "18px",
+          "fontFamily": "Arial",
+          "color": "#888888",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 1000,
+            "targetAlpha": 0.7
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_audio",
+      "name": "Sound Effects",
+      "type": "audio",
+      "keyframes": [
+        {
+          "id": "birds",
+          "time": 2000,
+          "audio": "birds_chirping",
+          "volume": 0.3,
+          "loop": true
+        }
+      ]
+    },
+    {
+      "id": "track_camera",
+      "name": "Camera Effects",
+      "type": "camera",
+      "keyframes": [
+        {
+          "time": 0,
+          "effect": "fade",
+          "duration": 3000
+        },
+        {
+          "time": 57000,
+          "effect": "fade",
+          "duration": 3000
+        }
+      ]
+    },
+    {
+      "id": "track_events",
+      "name": "Events",
+      "type": "event",
+      "keyframes": [
+        {
+          "time": 60000,
+          "event": "exit",
+          "data": {
+            "scene": "MenuScene"
+          }
+        }
+      ]
+    }
+  ]
+}

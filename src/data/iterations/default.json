@@ -1,0 +1,93 @@
+{
+  "name": "Default Game",
+  "version": "2.0.0",
+  "lastModified": "2025-12-11T00:00:00.000Z",
+  "sequence": [
+    {
+      "type": "cinematic",
+      "templateId": "intro_1",
+      "name": "Opening Scene",
+      "background": "assets/backgrounds/farm_normal.png",
+      "character": "assets/characters/protagonist.png",
+      "characterPosition": "left",
+      "dialogue": "This is it... my new farm. Fresh start. What could go wrong?",
+      "speaker": "You",
+      "duration": 5000,
+      "music": "assets/audio/intro_theme.mp3"
+    },
+    {
+      "type": "gameplay",
+      "templateId": "farm_cycle_1",
+      "name": "Week 1 - Farm",
+      "duration": 60000,
+      "gridRows": 5,
+      "gridCols": 5,
+      "backgroundStart": "assets/backgrounds/farm_normal.png",
+      "toxicityThreshold": 30,
+      "backgroundNext": "assets/backgrounds/farm_toxic1.png",
+      "startingCash": 0
+    },
+    {
+      "type": "collection",
+      "templateId": "payment_1",
+      "name": "Week 1 - Payment",
+      "background": "assets/backgrounds/office.png",
+      "character": "assets/characters/collector.png",
+      "debtAmount": 100,
+      "debtMode": "fixed",
+      "dialogue": "Time to pay up. $100. Now."
+    },
+    {
+      "type": "cinematic",
+      "templateId": "week2_intro",
+      "name": "Week 2 Begins",
+      "background": "assets/backgrounds/farm_toxic1.png",
+      "character": "assets/characters/protagonist.png",
+      "characterPosition": "center",
+      "dialogue": "I made it through week one... but the land doesn't look right.",
+      "speaker": "You",
+      "duration": 4000,
+      "music": "assets/audio/gameplay_ambient.mp3"
+    },
+    {
+      "type": "gameplay",
+      "templateId": "farm_cycle_2",
+      "name": "Week 2 - Farm",
+      "duration": 60000,
+      "gridRows": 5,
+      "gridCols": 5,
+      "backgroundStart": "assets/backgrounds/farm_toxic1.png",
+      "toxicityThreshold": 30,
+      "backgroundNext": "assets/backgrounds/farm_toxic2.png",
+      "startingCash": 0
+    },
+    {
+      "type": "collection",
+      "templateId": "payment_2",
+      "name": "Week 2 - Payment",
+      "background": "assets/backgrounds/office.png",
+      "character": "assets/characters/collector.png",
+      "debtAmount": 150,
+      "debtMode": "fixed",
+      "dialogue": "Twice as hard this week. $150. Don't make me wait."
+    },
+    {
+      "type": "cinematic",
+      "templateId": "ending_bad",
+      "name": "Ending - The Cost",
+      "background": "assets/backgrounds/farm_toxic3.png",
+      "character": "assets/characters/protagonist.png",
+      "characterPosition": "center",
+      "dialogue": "Everything is dead. The land, the animals... maybe me too.",
+      "speaker": "You",
+      "duration": 6000,
+      "music": "assets/audio/ending.mp3"
+    }
+  ],
+  "globalState": {
+    "toxicityLevel": 0,
+    "cash": 0,
+    "day": 1,
+    "variables": {}
+  }
+}

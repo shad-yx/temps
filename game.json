@@ -1,0 +1,36 @@
+{
+  "name": "Default Game",
+  "version": "1.0.0",
+  "exported": "2025-12-11T07:34:11.476Z",
+  "sequence": [
+    {
+      "type": "cinematic",
+      "templateId": "intro_default",
+      "name": "Untitled Cinematic",
+      "background": "assets/backgrounds/farm_normal.png",
+      "character": "",
+      "characterPosition": "left",
+      "dialogue": "hi im ru",
+      "speaker": "ru",
+      "duration": 10000,
+      "music": ""
+    },
+    {
+      "type": "gameplay",
+      "templateId": "farm_week1",
+      "name": "Farm Cycle",
+      "duration": 30000,
+      "backgroundStart": "assets/backgrounds/farm_normal.png",
+      "toxicityThreshold": 30,
+      "backgroundNext": "assets/backgrounds/farm_toxic1.png",
+      "gridRows": 5,
+      "gridCols": 5,
+      "startingCash": 100
+    }
+  ],
+  "globalState": {
+    "toxicityLevel": 0,
+    "cash": 0,
+    "day": 1
+  }
+}

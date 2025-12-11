@@ -86,6 +86,9 @@ export class GameScene extends Phaser.Scene {
     this.events.on('resume', () => {
       console.log('[GameScene] Scene resumed');
 
+      // Fade in camera
+      this.cameras.main.fadeIn(500);
+
       // Restart animal production
       if (this.animalManager) {
         this.animalManager.resumeProduction();

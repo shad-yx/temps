@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEADDAY - Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            line-height: 1;
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFFFFF;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .error-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff4444;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background: #1a1a1a;
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .error-screen h2 {
+            margin-bottom: 20px;
+            color: #ff6666;
+        }
+
+        .error-screen p {
+            margin-bottom: 15px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .error-screen button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .error-screen button:hover {
+            background: #66BB6A;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Loading game...</div>
+    <div id="game-container"></div>
+
+    <div class="error-screen" id="error-screen">
+        <h2>⚠️ No Game Found</h2>
+        <p>This is the game player. You need to create a game first using the builder.</p>
+        <p><strong>Steps:</strong></p>
+        <p>1. Open <strong>builder.html</strong> in your browser</p>
+        <p>2. Create your game by dragging templates</p>
+        <p>3. Click "Export Game" button</p>
+        <p>4. Save the <strong>game.json</strong> file to the root folder</p>
+        <p>5. Refresh this page</p>
+        <button onclick="window.location.href='builder.html'">Open Builder</button>
+    </div>
+
+    <!-- Load Phaser -->
+    <script src="./phaser.js"></script>
+
+    <!-- Load Game Runtime -->
+    <script type="module">
+        import { GameConfig } from './src/config/GameConfig.js';
+        import { SimpleCinematicScene } from './src/scenes/SimpleCinematicScene.js';
+        import { SimpleGameplayScene } from './src/scenes/SimpleGameplayScene.js';
+        import { SimpleCollectionScene } from './src/scenes/SimpleCollectionScene.js';
+
+        // Simple game player - no menu, just loads and plays
+        class GamePlayer extends Phaser.Scene {
+            constructor() {
+                super({ key: 'GamePlayer' });
+                this.sequence = [];
+                this.currentIndex = 0;
+            }
+
+            async create() {
+                console.log('[GamePlayer] Loading game data...');
+
+                // Try to load game data
+                let gameData = null;
+                let loadSource = 'none';
+
+                // PRIORITY 1: Try to load game.json (your exported game)
+                try {
+                    const response = await fetch('game.json?t=' + Date.now()); // Cache bust
+                    if (response.ok) {
+                        gameData = await response.json();
+                        loadSource = 'game.json (EXPORTED)';
+                        console.log('[GamePlayer] ✓ Loaded from game.json');
+                    }
+                } catch (e) {
+                    console.log('[GamePlayer] No game.json found, trying localStorage...');
+                }
+
+                // PRIORITY 2: Try localStorage (for quick testing with Test Game button)
+                if (!gameData) {
+                    const stored = localStorage.getItem('DEADDAY_EXPORTED_GAME');
+                    if (stored) {
+                        try {
+                            gameData = JSON.parse(stored);
+                            loadSource = 'localStorage (TEST MODE)';
+                            console.log('[GamePlayer] ✓ Loaded from localStorage (test mode)');
+                        } catch (e) {
+                            console.error('[GamePlayer] Failed to parse localStorage game:', e);
+                        }
+                    }
+                }
+
+                // PRIORITY 3: Fallback to default.json (should not happen)
+                if (!gameData) {
+                    try {
+                        const response = await fetch('src/data/iterations/default.json');
+                        if (response.ok) {
+                            gameData = await response.json();
+                            loadSource = 'default.json (FALLBACK)';
+                            console.warn('[GamePlayer] ⚠ Loading default.json - You should export from builder!');
+                        }
+                    } catch (e) {
+                        console.log('[GamePlayer] No default.json either');
+                    }
+                }
+
+                if (!gameData || !gameData.sequence || gameData.sequence.length === 0) {
+                    this.showError();
+                    return;
+                }
+
+                this.sequence = gameData.sequence;
+                console.log(`[GamePlayer] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+                console.log(`[GamePlayer] 📦 GAME LOADED FROM: ${loadSource}`);
+                console.log(`[GamePlayer] 🎮 Game: ${gameData.name}`);
+                console.log(`[GamePlayer] 📝 Templates: ${this.sequence.length}`);
+                console.log(`[GamePlayer] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+
+                // Show what we're playing in loading text
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.textContent = `Loading: ${gameData.name} (${this.sequence.length} templates)\nSource: ${loadSource}`;
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                    }, 2000);
+                }
+
+                // Start first template
+                setTimeout(() => {
+                    this.playTemplate(0);
+                }, 2000);
+            }
+
+            showError() {
+                const loading = document.getElementById('loading');
+                const error = document.getElementById('error-screen');
+                if (loading) loading.style.display = 'none';
+                if (error) error.style.display = 'block';
+            }
+
+            playTemplate(index) {
+                if (index >= this.sequence.length) {
+                    console.log('[GamePlayer] Game complete!');
+                    this.showEndScreen();
+                    return;
+                }
+
+                this.currentIndex = index;
+                const template = this.sequence[index];
+
+                console.log(`[GamePlayer] Playing template ${index + 1}/${this.sequence.length}:`, template.type);
+
+                // Store reference for next template
+                window.DEADDAY_GAME = {
+                    sequence: this.sequence,
+                    currentIndex: index,
+                    nextTemplate: () => this.playTemplate(index + 1)
+                };
+
+                if (template.type === 'cinematic') {
+                    this.playCinematic(template);
+                } else if (template.type === 'gameplay') {
+                    this.playGameplay(template);
+                } else if (template.type === 'collection') {
+                    this.playCollection(template);
+                }
+            }
+
+            playCinematic(template) {
+                console.log('[GamePlayer] Playing CINEMATIC:', template.name);
+                this.scene.start('SimpleCinematicScene', {
+                    template: template,
+                    onComplete: () => window.DEADDAY_GAME.nextTemplate()
+                });
+            }
+
+            playGameplay(template) {
+                console.log('[GamePlayer] Playing GAMEPLAY:', template.name);
+                this.scene.start('SimpleGameplayScene', {
+                    template: template,
+                    onComplete: () => window.DEADDAY_GAME.nextTemplate()
+                });
+            }
+
+            playCollection(template) {
+                console.log('[GamePlayer] Playing COLLECTION:', template.name);
+                this.scene.start('SimpleCollectionScene', {
+                    template: template,
+                    onComplete: () => window.DEADDAY_GAME.nextTemplate()
+                });
+            }
+
+            showEndScreen() {
+                // Simple end screen
+                this.cameras.main.fadeOut(1000);
+                this.time.delayedCall(1500, () => {
+                    const text = this.add.text(
+                        GameConfig.SCREEN.WIDTH / 2,
+                        GameConfig.SCREEN.HEIGHT / 2,
+                        'THE END\n\nThanks for playing!',
+                        {
+                            fontSize: '48px',
+                            fontFamily: 'Georgia, serif',
+                            color: '#FFFFFF',
+                            align: 'center'
+                        }
+                    );
+                    text.setOrigin(0.5);
+                    this.cameras.main.fadeIn(1000);
+
+                    // Restart option
+                    this.time.delayedCall(3000, () => {
+                        const restart = this.add.text(
+                            GameConfig.SCREEN.WIDTH / 2,
+                            GameConfig.SCREEN.HEIGHT / 2 + 100,
+                            'Click to restart',
+                            {
+                                fontSize: '24px',
+                                fontFamily: 'Georgia, serif',
+                                color: '#4CAF50'
+                            }
+                        );
+                        restart.setOrigin(0.5);
+                        restart.setInteractive({ useHandCursor: true });
+                        restart.on('pointerdown', () => {
+                            this.scene.restart();
+                        });
+                    });
+                });
+            }
+        }
+
+        // Configure Phaser
+        const config = {
+            type: Phaser.AUTO,
+            title: 'DEADDAY',
+            parent: 'game-container',
+            width: GameConfig.SCREEN.WIDTH,
+            height: GameConfig.SCREEN.HEIGHT,
+            backgroundColor: '#000000',
+            pixelArt: false,
+            scene: [
+                GamePlayer,
+                SimpleCinematicScene,
+                SimpleGameplayScene,
+                SimpleCollectionScene
+            ],
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+            },
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    debug: false,
+                },
+            },
+        };
+
+        const game = new Phaser.Game(config);
+
+        window.DEADDAY = {
+            game,
+            isPlayer: true
+        };
+
+        console.log('[DEADDAY Game] Player initialized');
+    </script>
+
+    <script>
+        // Remove loading text once game loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loading = document.getElementById('loading');
+                // Don't hide loading here - GamePlayer will do it
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

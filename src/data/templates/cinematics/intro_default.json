@@ -1,0 +1,246 @@
+{
+  "id": "intro_default",
+  "name": "Default Intro Cinematic",
+  "description": "Standard game introduction sequence",
+  "version": "1.0.0",
+  "duration": 45000,
+  "music": "intro_theme",
+  "nextScene": "GameScene",
+  "fallbackScene": "MenuScene",
+  "assets": {
+    "images": {
+      "intro_bg_1": "assets/cinematics/intro/bg_farm_dawn.png",
+      "intro_bg_2": "assets/cinematics/intro/bg_farm_day.png",
+      "intro_character_farmer": "assets/cinematics/intro/farmer_silhouette.png",
+      "intro_logo": "assets/cinematics/intro/deadday_logo.png",
+      "intro_truck": "assets/cinematics/intro/truck.png"
+    },
+    "audio": {
+      "intro_theme": "assets/audio/music/intro_theme.mp3",
+      "truck_engine": "assets/audio/sfx/truck_engine.mp3",
+      "rooster_crow": "assets/audio/sfx/rooster_crow.mp3"
+    }
+  },
+  "tracks": [
+    {
+      "id": "track_background",
+      "name": "Background Layer",
+      "type": "image",
+      "layer": "background",
+      "keyframes": [
+        {
+          "id": "bg_1",
+          "time": 0,
+          "duration": 8000,
+          "image": "intro_bg_1",
+          "x": 960,
+          "y": 540,
+          "alpha": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "entrance": {
+            "type": "fade",
+            "duration": 2000,
+            "targetAlpha": 1,
+            "easing": "Cubic.easeIn"
+          },
+          "animation": {
+            "alpha": 1,
+            "easing": "Linear"
+          }
+        },
+        {
+          "id": "bg_2",
+          "time": 8000,
+          "duration": 37000,
+          "image": "intro_bg_2",
+          "x": 960,
+          "y": 540,
+          "alpha": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "entrance": {
+            "type": "fade",
+            "duration": 3000,
+            "targetAlpha": 1,
+            "easing": "Cubic.easeInOut"
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_logo",
+      "name": "Logo Layer",
+      "type": "image",
+      "layer": "overlay",
+      "keyframes": [
+        {
+          "id": "logo",
+          "time": 2000,
+          "duration": 4000,
+          "image": "intro_logo",
+          "x": 960,
+          "y": 300,
+          "alpha": 0,
+          "scaleX": 0.5,
+          "scaleY": 0.5,
+          "entrance": {
+            "type": "fade",
+            "duration": 1500,
+            "targetAlpha": 1,
+            "easing": "Cubic.easeOut"
+          },
+          "animation": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "easing": "Back.easeOut"
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_title_text",
+      "name": "Title Text",
+      "type": "text",
+      "layer": "ui",
+      "keyframes": [
+        {
+          "id": "title",
+          "time": 3000,
+          "duration": 3000,
+          "text": "DEADDAY",
+          "x": 960,
+          "y": 540,
+          "fontSize": "72px",
+          "fontFamily": "Arial Black",
+          "color": "#ff0000",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 1000,
+            "targetAlpha": 1
+          }
+        },
+        {
+          "id": "subtitle",
+          "time": 4000,
+          "duration": 3000,
+          "text": "Every day brings you closer to the end",
+          "x": 960,
+          "y": 640,
+          "fontSize": "24px",
+          "fontFamily": "Arial",
+          "color": "#ffffff",
+          "align": "center",
+          "entrance": {
+            "type": "fade",
+            "duration": 1000,
+            "targetAlpha": 0.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_dialogue",
+      "name": "Dialogue",
+      "type": "dialogue",
+      "keyframes": [
+        {
+          "time": 10000,
+          "speaker": "Narrator",
+          "text": "Your grandfather's farm. A place you never wanted to return to.",
+          "speed": 30,
+          "pausePlayback": true
+        },
+        {
+          "time": 12000,
+          "speaker": "Narrator",
+          "text": "But debts don't pay themselves, and desperate times call for desperate measures.",
+          "speed": 30,
+          "pausePlayback": true
+        },
+        {
+          "time": 14000,
+          "speaker": "Narrator",
+          "text": "The farm holds secrets. Dark secrets that died with the old man... or so you thought.",
+          "speed": 30,
+          "pausePlayback": true
+        }
+      ]
+    },
+    {
+      "id": "track_truck",
+      "name": "Truck Animation",
+      "type": "image",
+      "layer": "foreground",
+      "keyframes": [
+        {
+          "id": "truck",
+          "time": 20000,
+          "duration": 3000,
+          "image": "intro_truck",
+          "x": -200,
+          "y": 700,
+          "scaleX": 0.8,
+          "scaleY": 0.8,
+          "animation": {
+            "x": 2120,
+            "easing": "Linear"
+          }
+        }
+      ]
+    },
+    {
+      "id": "track_audio_sfx",
+      "name": "Sound Effects",
+      "type": "audio",
+      "keyframes": [
+        {
+          "id": "rooster",
+          "time": 8000,
+          "audio": "rooster_crow",
+          "volume": 0.6,
+          "loop": false
+        },
+        {
+          "id": "truck_sound",
+          "time": 20000,
+          "audio": "truck_engine",
+          "volume": 0.4,
+          "loop": false
+        }
+      ]
+    },
+    {
+      "id": "track_camera",
+      "name": "Camera Effects",
+      "type": "camera",
+      "keyframes": [
+        {
+          "time": 0,
+          "effect": "fade",
+          "duration": 2000
+        },
+        {
+          "time": 43000,
+          "effect": "fade",
+          "duration": 2000
+        }
+      ]
+    },
+    {
+      "id": "track_events",
+      "name": "Game Events",
+      "type": "event",
+      "keyframes": [
+        {
+          "time": 45000,
+          "event": "exit",
+          "data": {
+            "scene": "GameScene"
+          }
+        }
+      ]
+    }
+  ]
+}

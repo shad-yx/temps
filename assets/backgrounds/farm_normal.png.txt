@@ -1,0 +1,4 @@
+Placeholder for: Farm - Normal Background
+Use: Green/brown farmland, sunny day
+Size: 1280x720
+Color: #4CAF50, #8D6E63

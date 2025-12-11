@@ -1,0 +1,5 @@
+@"
+# Run this command in PowerShell as Administrator to setup the Claude Auto-Continue Agent:
+
+`$ScriptPath = "c:\Users\shady\OneDrive\Documents\phaser\temps\claude-auto-continue.ps1"; `$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `\`"$ScriptPath`\`""; `$Trigger = New-ScheduledTaskTrigger -AtStartup; `$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable; `$Principal = New-ScheduledTaskPrincipal -UserId (whoami) -RunLevel Highest; Register-ScheduledTask -TaskName "ClaudeAutoContinueAgent" -Action `$Action -Trigger `$Trigger -Settings `$Settings -Principal `$Principal -Force; Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `\`"$ScriptPath`\`"" -WindowStyle Hidden; Write-Host "Agent setup and running!"
+"@

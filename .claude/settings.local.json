@@ -18,7 +18,11 @@
       "Bash(python:*)",
       "Bash(node --version:*)",
       "Bash(npm:*)",
-      "Bash(firebase deploy:*)"
+      "Bash(firebase deploy:*)",
+      "Bash(python3:*)",
+      "Bash(npx http-server -p 8000 -c-1)",
+      "Bash(node --check:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

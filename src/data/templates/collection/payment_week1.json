@@ -1,0 +1,61 @@
+{
+  "id": "payment_week1",
+  "type": "collection",
+  "name": "Week 1 Payment",
+  "description": "First week debt collection",
+  "debtCalculation": {
+    "mode": "fixed",
+    "baseAmount": 100,
+    "multiplier": 1.0,
+    "formula": "",
+    "randomRange": { "min": 50, "max": 150 }
+  },
+  "character": {
+    "name": "Debt Collector",
+    "portrait": "collector_neutral",
+    "position": "center"
+  },
+  "dialogue": [
+    {
+      "text": "Time to pay up. You owe me $100.",
+      "portrait": "collector_neutral"
+    },
+    {
+      "text": "Don't even think about running.",
+      "portrait": "collector_threatening"
+    }
+  ],
+  "requiredItems": [],
+  "paymentMethods": [
+    {
+      "type": "cash",
+      "label": "Pay Cash",
+      "enabled": true
+    },
+    {
+      "type": "items",
+      "label": "Trade Items",
+      "enabled": false
+    }
+  ],
+  "background": "payment_room",
+  "audio": {
+    "bgm": "payment_theme",
+    "sfx": {
+      "success": "payment_success",
+      "failure": "payment_failure"
+    }
+  },
+  "ui": {
+    "font": {
+      "family": "Georgia, serif",
+      "size": "20px",
+      "color": "#FFFFFF"
+    },
+    "backgroundColor": "#0a0a0a"
+  },
+  "nextTemplate": {
+    "type": "cinematic",
+    "id": "ending_good"
+  }
+}

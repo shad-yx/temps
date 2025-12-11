@@ -1,0 +1,56 @@
+{
+  "id": "farm_week1",
+  "type": "gameplay",
+  "name": "Farm Week 1",
+  "description": "First week of farming gameplay",
+  "duration": 60000,
+  "grid": {
+    "rows": 5,
+    "cols": 5,
+    "cellSize": 80,
+    "position": { "x": 200, "y": 150 }
+  },
+  "animals": [
+    {
+      "type": "chicken",
+      "position": { "row": 2, "col": 2 },
+      "productionRate": 5000,
+      "productValue": 10,
+      "toxicityPerProduct": 1
+    }
+  ],
+  "timeCycle": {
+    "dayDuration": 30000,
+    "nightDuration": 10000,
+    "totalDays": 7
+  },
+  "economy": {
+    "startingCash": 0,
+    "prices": {
+      "chicken": 50,
+      "cow": 150,
+      "pig": 100
+    }
+  },
+  "toxicity": {
+    "threshold": 100,
+    "visualChanges": [
+      { "level": 0, "background": "farm_normal" },
+      { "level": 30, "background": "farm_slightly_toxic" },
+      { "level": 60, "background": "farm_toxic" },
+      { "level": 90, "background": "farm_very_toxic" }
+    ]
+  },
+  "ui": {
+    "font": {
+      "family": "Georgia, serif",
+      "size": "18px",
+      "color": "#FFFFFF"
+    },
+    "backgroundColor": "#1a1a1a"
+  },
+  "nextTemplate": {
+    "type": "collection",
+    "id": "payment_week1"
+  }
+}

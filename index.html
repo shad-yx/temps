@@ -52,11 +52,87 @@
     <div id="loading">Loading DEADDAY...</div>
     <div id="game-container"></div>
 
+    <!-- Unified Builder Overlay -->
+    <div id="editor-overlay" style="display: none;">
+        <div class="editor-layout">
+            <!-- Top Toolbar -->
+            <div class="editor-toolbar">
+                <div class="toolbar-left">
+                    <button id="back-to-menu-btn" class="btn">◀ Menu</button>
+                    <span class="editor-title">DEADDAY - Unified Builder</span>
+                </div>
+                <div class="toolbar-right">
+                    <span style="color: #666; font-size: 12px; margin-right: 10px;">Drag templates • Click to edit • Save & Play</span>
+                </div>
+            </div>
+
+            <!-- Unified Builder -->
+            <div id="unified-builder"></div>
+        </div>
+    </div>
+
+    <!-- Load Editor CSS -->
+    <link rel="stylesheet" href="editor/editor.css">
+
     <!-- Load Phaser -->
     <script src="./phaser.js"></script>
 
     <!-- Load game (cache busting with timestamp) -->
-    <script type="module" src="./src/main.js?v=20251209v2"></script>
+    <script type="module" src="./src/main.js?v=20251209v3"></script>
+
+    <!-- Load Unified Builder Module -->
+    <script type="module">
+        import { UnifiedBuilder } from './editor/UnifiedBuilder.js';
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loading = document.getElementById('loading');
+                if (loading) loading.style.display = 'none';
+            }, 1000);
+
+            // Initialize Unified Builder when DEADDAY engine is ready
+            const initEditor = () => {
+                if (!window.DEADDAY) {
+                    setTimeout(initEditor, 100);
+                    return;
+                }
+
+                window.EditorUI = {
+                    builder: new UnifiedBuilder(),
+
+                    show() {
+                        document.getElementById('editor-overlay').style.display = 'block';
+                        document.getElementById('game-container').style.display = 'none';
+
+                        // Initialize builder if not already done
+                        if (!this._initialized) {
+                            this.builder.init();
+                            this._initialized = true;
+                        }
+                    },
+
+                    hide() {
+                        document.getElementById('editor-overlay').style.display = 'none';
+                        document.getElementById('game-container').style.display = 'flex';
+                    }
+                };
+
+                console.log('[DEADDAY Unified Builder] Editor initialized');
+
+                // Wire up back-to-menu button
+                const backToMenuBtn = document.getElementById('back-to-menu-btn');
+                if (backToMenuBtn) {
+                    backToMenuBtn.addEventListener('click', () => {
+                        console.log('[Unified Builder] Back to menu clicked');
+                        window.EditorUI.hide();
+                        window.DEADDAY.game.scene.start('MenuScene');
+                    });
+                }
+            };
+
+            initEditor();
+        });
+    </script>
 
     <script>
         // Remove loading text once game loads

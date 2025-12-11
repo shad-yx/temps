@@ -665,29 +665,15 @@ export class PaymentScene extends Phaser.Scene {
         const gameScene = this.scene.get('GameScene');
         if (gameScene && gameScene.debtManager) {
           gameScene.debtManager.cash = this.currentCash;
+          // Advance to next day
+          gameScene.debtManager.advanceDay();
         }
 
-        // Calculate week number (based on current day)
-        const weekNumber = Math.floor((this.currentDay - 1) / 7) + 1;
+        console.log(`[PaymentScene] Debt paid! Advancing to next day and resuming GameScene.`);
 
-        // Determine which dialogue to show
-        let dialogueKey = 'week_end_1'; // Default
-        if (weekNumber === 2) dialogueKey = 'week_end_2';
-        else if (weekNumber === 3) dialogueKey = 'week_end_3';
-        else if (weekNumber >= 4) dialogueKey = 'week_end_3'; // Reuse for now
-
-        console.log(`[PaymentScene] Week ${weekNumber} complete. Showing dialogue: ${dialogueKey}`);
-
-        // Start week-end dialogue scene
-        this.scene.start('DialogueScene', {
-          dialogueKey: dialogueKey,
-          nextScene: 'GameScene',
-          nextSceneData: {
-            resumeFromPayment: true,
-            currentCash: this.currentCash,
-            currentDay: this.currentDay
-          }
-        });
+        // Stop PaymentScene and resume GameScene (don't restart!)
+        this.scene.stop('PaymentScene');
+        this.scene.resume('GameScene');
       });
     });
   }
